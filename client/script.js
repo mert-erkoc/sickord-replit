@@ -78,10 +78,21 @@ function createPeerConnection(id, remoteUsername) {
         }
     };
 
+    // Yerel ses akışını ekle
     localStream.getTracks().forEach(track => {
-      pc.addTrack(track, localStream);
-      console.log("Track added:", track);
+      const sender = pc.addTrack(track, localStream);
+      console.log("Local track added:", track.kind);
     });
+
+    // Uzak ses akışını almaya hazır ol
+    pc.ontrack = event => {
+      console.log("Remote track received:", event.track.kind);
+      const stream = event.streams[0];
+      const audio = new Audio();
+      audio.srcObject = stream;
+      audio.autoplay = true;
+      document.body.appendChild(audio);
+    };
   
     pc.onicecandidate = event => {
       if (event.candidate) {
@@ -112,7 +123,6 @@ socket.on("new-user", async ({ id, username }) => {
   try {
     const offer = await pc.createOffer({
       offerToReceiveAudio: true,
-      offerToSendAudio: true,
       voiceActivityDetection: true,
       iceRestart: true
     });
