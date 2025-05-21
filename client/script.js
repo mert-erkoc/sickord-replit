@@ -44,18 +44,23 @@ function removeUserFromList(id) {
 }
 
 function createPeerConnection(id, remoteUsername) {
+    console.log("Peer bağlantısı oluşturuluyor:", id);
     const pc = new RTCPeerConnection({
         iceServers: [
-          { urls: "stun:stun.l.google.com:19302" },
-          {
-            urls: "turn:openrelay.metered.ca:80",
-            username: "openrelayproject",
-            credential: "openrelayproject"
-          }
-        ]
-      });
-      
-  
+            { urls: ["stun:stun.l.google.com:19302", "stun:stun1.l.google.com:19302"] },
+            {
+                urls: "turn:openrelay.metered.ca:80",
+                username: "openrelayproject",
+                credential: "openrelayproject"
+            }
+        ],
+        iceCandidatePoolSize: 10
+    });
+
+    pc.oniceconnectionstatechange = () => {
+        console.log("ICE Bağlantı durumu:", pc.iceConnectionState);
+    };
+
     localStream.getTracks().forEach(track => {
       pc.addTrack(track, localStream);
       console.log("Track added:", track);
@@ -142,4 +147,3 @@ function toggleMic() {
       button.textContent = "🎤 Mikrofon Açık";
     }
   }
-  
