@@ -84,22 +84,21 @@ function createPeerConnection(id, remoteUsername) {
       console.log("Local track added:", track.kind);
     });
 
-    // Uzak ses akışını almaya hazır ol
     pc.ontrack = event => {
       console.log("Remote track received:", event.track.kind);
       const stream = event.streams[0];
-
-      // Her kullanıcı için bir kez audio elementi oluştur
+      
       const audioId = `audio-${id}`;
       let audio = document.getElementById(audioId);
-
+      
       if (!audio) {
-        audio = new Audio();
+        audio = document.createElement("audio");
         audio.id = audioId;
         audio.autoplay = true;
+        audio.controls = true;
         document.body.appendChild(audio);
       }
-
+      
       audio.srcObject = stream;
     };
 
@@ -108,14 +107,6 @@ function createPeerConnection(id, remoteUsername) {
         console.log("ICE candidate gönderiliyor:", event.candidate);
         socket.emit("ice-candidate", { room, candidate: event.candidate, to: id });
       }
-    };
-
-    pc.ontrack = event => {
-      console.log("Yeni track geldi!");  // 💥 BURASI çok önemli
-      const audio = document.createElement("audio");
-      audio.srcObject = event.streams[0];
-      audio.autoplay = true;
-      document.body.appendChild(audio);
     };
 
     return pc;
