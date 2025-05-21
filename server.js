@@ -14,6 +14,11 @@ app.use(express.static("client"));
 io.on("connection", (socket) => {
   console.log("Kullanıcı bağlandı:", socket.id);
 
+  // Her 5 saniyede bir ping/pong kontrolü
+  const pingInterval = setInterval(() => {
+    socket.emit("ping");
+  }, 5000);
+
   socket.on("join", ({ room, username }) => {
     socket.join(room);
     socket.to(room).emit("new-user", { id: socket.id, username });

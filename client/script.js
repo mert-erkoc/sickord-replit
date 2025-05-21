@@ -59,6 +59,19 @@ function createPeerConnection(id, remoteUsername) {
 
     pc.oniceconnectionstatechange = () => {
         console.log("ICE Bağlantı durumu:", pc.iceConnectionState);
+        if (pc.iceConnectionState === "failed" || pc.iceConnectionState === "disconnected") {
+            console.log("Bağlantı yeniden kurulmaya çalışılıyor...");
+            pc.restartIce();
+        }
+    };
+
+    // Bağlantı durumunu izle
+    pc.onconnectionstatechange = () => {
+        console.log("Bağlantı durumu:", pc.connectionState);
+        if (pc.connectionState === "failed") {
+            console.log("Bağlantı yeniden başlatılıyor...");
+            createPeerConnection(id, remoteUsername);
+        }
     };
 
     localStream.getTracks().forEach(track => {
