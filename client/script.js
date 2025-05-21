@@ -44,21 +44,23 @@ function removeUserFromList(id) {
 }
 
 function createPeerConnection(id, remoteUsername) {
+    if (peers[id]) {
+        console.log("Var olan bağlantı kapatılıyor:", id);
+        peers[id].close();
+    }
+    
     console.log("Peer bağlantısı oluşturuluyor:", id);
     const pc = new RTCPeerConnection({
         iceServers: [
-            { urls: ["stun:stun.l.google.com:19302", "stun:stun1.l.google.com:19302"] },
+            { urls: ["stun:stun.l.google.com:19302"] },
             {
                 urls: "turn:openrelay.metered.ca:80",
                 username: "openrelayproject",
                 credential: "openrelayproject"
             }
         ],
-        iceCandidatePoolSize: 10,
-        iceTransportPolicy: 'all',
-        bundlePolicy: 'max-bundle',
-        rtcpMuxPolicy: 'require',
-        sdpSemantics: 'unified-plan'
+        iceCandidatePoolSize: 1,
+        bundlePolicy: 'max-bundle'
     });
 
     pc.oniceconnectionstatechange = () => {
@@ -79,27 +81,24 @@ function createPeerConnection(id, remoteUsername) {
     };
 
     // Yerel ses akışını ekle
-    localStream.getTracks().forEach(track => {
-      const sender = pc.addTrack(track, localStream);
-      console.log("Local track added:", track.kind);
-    });
+    if (localStream) {
+        localStream.getTracks().forEach(track => {
+            pc.addTrack(track, localStream);
+        });
+    }
 
     pc.ontrack = event => {
-      console.log("Remote track received:", event.track.kind);
-      const stream = event.streams[0];
-      
-      const audioId = `audio-${id}`;
-      let audio = document.getElementById(audioId);
-      
-      if (!audio) {
-        audio = document.createElement("audio");
+        const audioId = `audio-${id}`;
+        const existingAudio = document.getElementById(audioId);
+        if (existingAudio) {
+            existingAudio.remove();
+        }
+
+        const audio = new Audio();
         audio.id = audioId;
         audio.autoplay = true;
-        audio.controls = true;
+        audio.srcObject = event.streams[0];
         document.body.appendChild(audio);
-      }
-      
-      audio.srcObject = stream;
     };
 
     pc.onicecandidate = event => {
