@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Reisler Team Sikcord</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Sikcord</h1>
+
+  <div id="login">
+    <h2>Odaya Katıl</h2>
+    <input id="username" placeholder="Kullanıcı adınız">
+    <input id="roomInput" placeholder="Oda ismi">
+    <button onclick="joinRoom()">Katıl</button>
+  </div>
+
+  <div id="chatroom" class="hidden">
+    <h2 id="roomTitle"></h2>
+    <div id="userList"></div>
+    <div class="controls">
+      <label>Ses Düzeyi:
+        <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="1">
+      </label>
+      <button class="mic-on" onclick="toggleMic()">🎤 Mikrofon Açık</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
