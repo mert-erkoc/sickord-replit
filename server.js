@@ -17,7 +17,11 @@ io.on("connection", (socket) => {
   // Her 5 saniyede bir ping/pong kontrolü
   const pingInterval = setInterval(() => {
     socket.emit("ping");
-  }, 5000);
+  }, 2000);
+
+  socket.on("pong", () => {
+    console.log("Pong from:", socket.id);
+  });
 
   socket.on("join", ({ room, username }) => {
     socket.join(room);

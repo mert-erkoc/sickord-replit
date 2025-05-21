@@ -54,7 +54,10 @@ function createPeerConnection(id, remoteUsername) {
                 credential: "openrelayproject"
             }
         ],
-        iceCandidatePoolSize: 10
+        iceCandidatePoolSize: 10,
+        iceTransportPolicy: 'all',
+        bundlePolicy: 'max-bundle',
+        rtcpMuxPolicy: 'require'
     });
 
     pc.oniceconnectionstatechange = () => {
@@ -99,16 +102,27 @@ function createPeerConnection(id, remoteUsername) {
   
 
 // Yeni kullanıcı geldiğinde
-socket.on("new-user", ({ id, username }) => {
+socket.on("new-user", async ({ id, username }) => {
   addUserToList(id, username);
 
   const pc = createPeerConnection(id, username);
   peers[id] = pc;
 
-  pc.createOffer().then(offer => {
-    pc.setLocalDescription(offer);
+  try {
+    const offer = await pc.createOffer({
+      offerToReceiveAudio: true,
+      iceRestart: true
+    });
+    await pc.setLocalDescription(offer);
     socket.emit("offer", { room, offer, to: id });
-  });
+  } catch (error) {
+    console.error("Offer oluşturma hatası:", error);
+    setTimeout(() => {
+      if (pc.connectionState !== "connected") {
+        pc.restartIce();
+      }
+    }, 3000);
+  }
 });
 
 // Teklif aldık
