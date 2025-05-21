@@ -57,7 +57,8 @@ function createPeerConnection(id, remoteUsername) {
         iceCandidatePoolSize: 10,
         iceTransportPolicy: 'all',
         bundlePolicy: 'max-bundle',
-        rtcpMuxPolicy: 'require'
+        rtcpMuxPolicy: 'require',
+        sdpSemantics: 'unified-plan'
     });
 
     pc.oniceconnectionstatechange = () => {
@@ -111,6 +112,8 @@ socket.on("new-user", async ({ id, username }) => {
   try {
     const offer = await pc.createOffer({
       offerToReceiveAudio: true,
+      offerToSendAudio: true,
+      voiceActivityDetection: true,
       iceRestart: true
     });
     await pc.setLocalDescription(offer);
