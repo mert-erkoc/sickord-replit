@@ -88,19 +88,28 @@ function createPeerConnection(id, remoteUsername) {
     pc.ontrack = event => {
       console.log("Remote track received:", event.track.kind);
       const stream = event.streams[0];
-      const audio = new Audio();
+
+      // Her kullanıcı için bir kez audio elementi oluştur
+      const audioId = `audio-${id}`;
+      let audio = document.getElementById(audioId);
+
+      if (!audio) {
+        audio = new Audio();
+        audio.id = audioId;
+        audio.autoplay = true;
+        document.body.appendChild(audio);
+      }
+
       audio.srcObject = stream;
-      audio.autoplay = true;
-      document.body.appendChild(audio);
     };
-  
+
     pc.onicecandidate = event => {
       if (event.candidate) {
         console.log("ICE candidate gönderiliyor:", event.candidate);
         socket.emit("ice-candidate", { room, candidate: event.candidate, to: id });
       }
     };
-  
+
     pc.ontrack = event => {
       console.log("Yeni track geldi!");  // 💥 BURASI çok önemli
       const audio = document.createElement("audio");
@@ -108,10 +117,10 @@ function createPeerConnection(id, remoteUsername) {
       audio.autoplay = true;
       document.body.appendChild(audio);
     };
-  
+
     return pc;
   }
-  
+
 
 // Yeni kullanıcı geldiğinde
 socket.on("new-user", async ({ id, username }) => {
@@ -174,7 +183,7 @@ socket.on("user-left", id => {
 function toggleMic() {
     const button = document.querySelector("button[onclick='toggleMic()']");
     const track = localStream.getAudioTracks()[0];
-  
+
     if (track.enabled) {
       track.enabled = false;
       button.classList.remove("mic-on");
