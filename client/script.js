@@ -255,6 +255,7 @@ function sendMessage() {
     
     if (message) {
         socket.emit('chat-message', { room, message, username });
+        addMessage(username, message); // Kendi mesajımızı da göster
         input.value = '';
     }
 }
@@ -267,6 +268,14 @@ function addMessage(username, message) {
     messages.appendChild(messageDiv);
     messages.scrollTop = messages.scrollHeight;
 }
+
+// Enter tuşu ile gönderme
+document.getElementById('messageInput').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        sendMessage();
+    }
+});
 
 // Chat mesajlarını dinle
 socket.on('chat-message', ({ username, message }) => {
