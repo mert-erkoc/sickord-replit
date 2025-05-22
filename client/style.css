@@ -66,3 +66,42 @@ body {
 .disconnect-btn:hover {
     background-color: #c82333;
 }
+
+.volume-menu {
+    position: fixed;
+    background: #2e2e40;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 1000;
+}
+
+.volume-menu.hidden {
+    display: none;
+}
+
+.volume-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-volume {
+    width: 100px;
+}
+
+.volume-value {
+    min-width: 45px;
+}
+
+#userList div {
+    padding: 8px;
+    margin: 5px 0;
+    background: #3e3e50;
+    border-radius: 4px;
+    cursor: context-menu;
+}
+
+#userList div:hover {
+    background: #4e4e60;
+}

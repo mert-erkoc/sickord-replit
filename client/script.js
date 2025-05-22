@@ -30,12 +30,60 @@ function joinRoom() {
 }
 
 // Kullanıcı arayüzüne eklenir
+const userVolumes = new Map(); // Kullanıcı ses seviyeleri
+
 function addUserToList(id, username) {
   const userList = document.getElementById("userList");
   const userDiv = document.createElement("div");
   userDiv.id = `user-${id}`;
   userDiv.textContent = `${username} katıldı`;
+  userDiv.addEventListener('contextmenu', (e) => showVolumeMenu(e, id));
   userList.appendChild(userDiv);
+  userVolumes.set(id, 1); // Varsayılan ses seviyesi
+}
+
+function showVolumeMenu(e, userId) {
+  e.preventDefault();
+  const menu = document.getElementById('volumeMenu');
+  const volumeSlider = menu.querySelector('.user-volume');
+  const volumeValue = menu.querySelector('.volume-value');
+  
+  // Mevcut ses seviyesini göster
+  volumeSlider.value = userVolumes.get(userId);
+  volumeValue.textContent = `${Math.round(volumeSlider.value * 100)}%`;
+  
+  // Menüyü konumlandır
+  menu.style.left = `${e.pageX}px`;
+  menu.style.top = `${e.pageY}px`;
+  menu.classList.remove('hidden');
+  
+  // Ses değişikliğini dinle
+  const updateVolume = () => {
+    const volume = parseFloat(volumeSlider.value);
+    userVolumes.set(userId, volume);
+    volumeValue.textContent = `${Math.round(volume * 100)}%`;
+    
+    // Ses elementini güncelle
+    const audio = document.getElementById(`audio-${userId}`);
+    if (audio) {
+      audio.volume = volume;
+    }
+  };
+  
+  volumeSlider.oninput = updateVolume;
+  
+  // Menü dışına tıklandığında kapat
+  const closeMenu = (e) => {
+    if (!menu.contains(e.target)) {
+      menu.classList.add('hidden');
+      document.removeEventListener('click', closeMenu);
+      volumeSlider.oninput = null;
+    }
+  };
+  
+  setTimeout(() => {
+    document.addEventListener('click', closeMenu);
+  }, 0);
 }
 
 function removeUserFromList(id) {
@@ -101,7 +149,7 @@ function createPeerConnection(id, remoteUsername) {
             audio.id = audioId;
             audio.autoplay = true;
             audio.playsInline = true;
-            audio.volume = 1.0;
+            audio.volume = userVolumes.get(id) || 1.0;
             audio.srcObject = event.streams[0];
             
             audio.onloadedmetadata = () => {
