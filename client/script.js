@@ -52,19 +52,15 @@ function createPeerConnection(id, remoteUsername) {
     console.log("Peer bağlantısı oluşturuluyor:", id);
     const pc = new RTCPeerConnection({
         iceServers: [
-            { urls: ["stun:stun.l.google.com:19302", "stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19302"] },
-            {
-                urls: [
-                    "turn:openrelay.metered.ca:80",
-                    "turn:openrelay.metered.ca:443",
-                    "turn:openrelay.metered.ca:443?transport=tcp"
-                ],
+            { urls: "stun:stun.l.google.com:19302" },
+            { 
+                urls: "turn:openrelay.metered.ca:80",
                 username: "openrelayproject",
                 credential: "openrelayproject"
             }
         ],
-        iceCandidatePoolSize: 10,
-        bundlePolicy: 'max-bundle',
+        iceTransportPolicy: 'all',
+        bundlePolicy: 'balanced',
         rtcpMuxPolicy: 'require'
     });
 
@@ -93,17 +89,29 @@ function createPeerConnection(id, remoteUsername) {
     }
 
     pc.ontrack = event => {
+        console.log("Ses track'i alındı:", id);
         const audioId = `audio-${id}`;
         const existingAudio = document.getElementById(audioId);
         if (existingAudio) {
             existingAudio.remove();
         }
 
-        const audio = new Audio();
-        audio.id = audioId;
-        audio.autoplay = true;
-        audio.srcObject = event.streams[0];
-        document.body.appendChild(audio);
+        if (event.streams && event.streams[0]) {
+            const audio = new Audio();
+            audio.id = audioId;
+            audio.autoplay = true;
+            audio.playsInline = true;
+            audio.volume = 1.0;
+            audio.srcObject = event.streams[0];
+            
+            audio.onloadedmetadata = () => {
+                console.log("Ses meta verisi yüklendi:", id);
+                audio.play().catch(e => console.error("Ses çalma hatası:", e));
+            };
+            
+            document.body.appendChild(audio);
+            console.log("Ses elementi eklendi:", id);
+        }
     };
 
     pc.onicecandidate = event => {
