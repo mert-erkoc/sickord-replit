@@ -13,7 +13,8 @@ function joinRoom() {
   document.getElementById("login").classList.add("hidden");
   document.getElementById("chatroom").classList.remove("hidden");
   document.getElementById("roomTitle").textContent = `Oda: ${room}`;
-
+  addUserToList('me', `${username} (Ben)`);
+  
   socket.emit("join", { room, username });
 
   navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
