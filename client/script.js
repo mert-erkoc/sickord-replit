@@ -255,7 +255,6 @@ function sendMessage() {
     
     if (message) {
         socket.emit('chat-message', { room, message, username });
-        addMessage(username, message); // Kendi mesajımızı da göster
         input.value = '';
     }
 }
