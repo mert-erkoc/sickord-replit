@@ -198,4 +198,35 @@ function toggleMic() {
       button.classList.add("mic-on");
       button.textContent = "🎤 Mikrofon Açık";
     }
-  }
+}
+
+function disconnectFromRoom() {
+    // Ses akışını kapat
+    if (localStream) {
+        localStream.getTracks().forEach(track => track.stop());
+    }
+    
+    // Peer bağlantılarını kapat
+    for (let id in peers) {
+        peers[id].close();
+        delete peers[id];
+    }
+    
+    // Soket bağlantısını odadan çıkar
+    if (room) {
+        socket.emit("leave-room", { room });
+    }
+    
+    // Tüm ses elementlerini kaldır
+    document.querySelectorAll("audio").forEach(audio => audio.remove());
+    
+    // Arayüzü sıfırla
+    document.getElementById("chatroom").classList.add("hidden");
+    document.getElementById("login").classList.remove("hidden");
+    document.getElementById("userList").innerHTML = "";
+    document.getElementById("roomInput").value = "";
+    
+    // Değişkenleri sıfırla
+    room = "";
+    username = "";
+}

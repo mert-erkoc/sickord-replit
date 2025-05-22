@@ -56,5 +56,13 @@ body {
   .mic-off {
     background-color: #dc3545; /* kırmızı */
     color: white;
-  }
-  
+}
+
+.disconnect-btn {
+    background-color: #dc3545;
+    margin-left: 10px;
+}
+
+.disconnect-btn:hover {
+    background-color: #c82333;
+}
