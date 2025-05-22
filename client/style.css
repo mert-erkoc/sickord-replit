@@ -105,3 +105,49 @@ body {
 #userList div:hover {
     background: #4e4e60;
 }
+
+.chat-container {
+    margin-top: 20px;
+    width: 100%;
+    max-width: 600px;
+}
+
+.messages {
+    height: 200px;
+    background: #2e2e40;
+    border-radius: 8px;
+    padding: 10px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+}
+
+.message {
+    background: #3e3e50;
+    padding: 8px;
+    margin: 5px 0;
+    border-radius: 4px;
+}
+
+.chat-input {
+    display: flex;
+    gap: 10px;
+}
+
+.chat-input input {
+    flex: 1;
+    background: #2e2e40;
+    color: white;
+}
+
+.chat-input button {
+    background: #4caf50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.chat-input button:hover {
+    background: #45a049;
+}

@@ -31,6 +31,13 @@
       <button class="mic-on" onclick="toggleMic()">🎤 Mikrofon Açık</button>
       <button class="disconnect-btn" onclick="disconnectFromRoom()">🚪 Bağlantıyı Kes</button>
     </div>
+    <div class="chat-container">
+      <div id="messages" class="messages"></div>
+      <div class="chat-input">
+        <input type="text" id="messageInput" placeholder="Mesajınızı yazın...">
+        <button onclick="sendMessage()">Gönder</button>
+      </div>
+    </div>
   </div>
 
   <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>

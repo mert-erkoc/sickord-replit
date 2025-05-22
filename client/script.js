@@ -249,6 +249,30 @@ function toggleMic() {
     }
 }
 
+function sendMessage() {
+    const input = document.getElementById('messageInput');
+    const message = input.value.trim();
+    
+    if (message) {
+        socket.emit('chat-message', { room, message, username });
+        input.value = '';
+    }
+}
+
+function addMessage(username, message) {
+    const messages = document.getElementById('messages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'message';
+    messageDiv.textContent = `${username}: ${message}`;
+    messages.appendChild(messageDiv);
+    messages.scrollTop = messages.scrollHeight;
+}
+
+// Chat mesajlarını dinle
+socket.on('chat-message', ({ username, message }) => {
+    addMessage(username, message);
+});
+
 function disconnectFromRoom() {
     // Ses akışını kapat
     if (localStream) {

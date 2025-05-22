@@ -41,6 +41,10 @@ io.on("connection", (socket) => {
     io.to(to).emit("ice-candidate", { candidate, from: socket.id });
   });
 
+  socket.on("chat-message", ({ room, message, username }) => {
+    socket.to(room).emit("chat-message", { username, message });
+  });
+
   socket.on("disconnect", () => {
     const room = socket.data.room;
     if (room) {
