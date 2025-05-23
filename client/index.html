@@ -1,46 +1,93 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="tr">
-<head>
-  <meta charset="UTF-8">
-  <title>Reisler Team Sikcord</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <h1>Sikcord</h1>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Reisler Team Sickord</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <h1>Sickord</h1>
+    <p><i>“Too sick for Discord? Get on Sickord.”</i></p>
 
-  <div id="login">
-    <h2>Odaya Katıl</h2>
-    <input id="username" placeholder="Kullanıcı adınız">
-    <input id="roomInput" placeholder="Oda ismi">
-    <button onclick="joinRoom()">Katıl</button>
-  </div>
+    <div id="login">
+      <h2>Odaya Katıl</h2>
+      <input id="username" placeholder="Kullanıcı adınız" />
+      <input id="roomInput" placeholder="Oda ismi" />
+      <button onclick="joinRoom()">Katıl</button>
+    </div>
 
-  <div id="chatroom" class="hidden">
-    <h2 id="roomTitle"></h2>
-    <div id="userList"></div>
-    <div id="volumeMenu" class="volume-menu hidden">
-      <div class="volume-control">
-        <input type="range" class="user-volume" min="0" max="1" step="0.01" value="1">
-        <span class="volume-value">100%</span>
+    <div id="chatroom" class="hidden">
+      <h2 id="roomTitle"></h2>
+      <div id="userList"></div>
+      <div id="volumeMenu" class="volume-menu hidden">
+        <div class="volume-control">
+          <input
+            type="range"
+            class="user-volume"
+            min="0"
+            max="1"
+            step="0.01"
+            value="1"
+          />
+          <span class="volume-value">100%</span>
+        </div>
+      </div>
+      <div class="controls">
+        <label
+          >Ses Düzeyi:
+          <input
+            type="range"
+            id="volumeSlider"
+            min="0"
+            max="1"
+            step="0.01"
+            value="1"
+          />
+        </label>
+        <button class="mic-on" onclick="toggleMic()">🎤 Mikrofon Açık</button>
+        <button class="disconnect-btn" onclick="disconnectFromRoom()">
+          🚪
+        </button>
+      </div>
+      <div class="chat-container">
+        <div id="messages" class="messages"></div>
+        <div class="chat-input">
+          <input
+            type="text"
+            id="messageInput"
+            placeholder="Mesajınızı yazın..."
+          />
+          <button onclick="sendMessage()">></button>
+        </div>
       </div>
     </div>
-    <div class="controls">
-      <label>Ses Düzeyi:
-        <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="1">
-      </label>
-      <button class="mic-on" onclick="toggleMic()">🎤 Mikrofon Açık</button>
-      <button class="disconnect-btn" onclick="disconnectFromRoom()">🚪 Bağlantıyı Kes</button>
-    </div>
-    <div class="chat-container">
-      <div id="messages" class="messages"></div>
-      <div class="chat-input">
-        <input type="text" id="messageInput" placeholder="Mesajınızı yazın...">
-        <button onclick="sendMessage()">Gönder</button>
-      </div>
-    </div>
-  </div>
 
-  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
-  <script src="script.js"></script>
-</body>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
+
+<footer
+  style="
+    position: fixed;
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    color: #aaa;
+  "
+>
+  Coded by
+  <a
+    href="https://github.com/metosama"
+    target="_blank"
+    style="color: #18acf8; text-decoration: none"
+  >
+    Metosama
+  </a>
+</footer>
 </html>

@@ -8,13 +8,12 @@ const io = new Server(server);
 
 const PORT = 3000;
 
-// İŞTE BU SATIRI EKLE
 app.use(express.static("client"));
 
 io.on("connection", (socket) => {
   console.log("Kullanıcı bağlandı:", socket.id);
 
-  // Her 5 saniyede bir ping/pong kontrolü
+  // Every 2 seconds send ping to client
   const pingInterval = setInterval(() => {
     socket.emit("ping");
   }, 2000);
@@ -30,7 +29,11 @@ io.on("connection", (socket) => {
   });
 
   socket.on("offer", ({ room, offer, to }) => {
-    io.to(to).emit("offer", { offer, from: socket.id, username: socket.data.username });
+    io.to(to).emit("offer", {
+      offer,
+      from: socket.id,
+      username: socket.data.username,
+    });
   });
 
   socket.on("answer", ({ room, answer, to }) => {
@@ -42,7 +45,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("chat-message", ({ room, message, username }) => {
-    socket.to(room).emit("chat-message", { username, message });
+    io.to(room).emit("chat-message", { username, message }); //
   });
 
   socket.on("disconnect", () => {
